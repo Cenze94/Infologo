@@ -44,17 +44,22 @@ import cz.msebera.android.httpclient.Header;
 import kotlin.Pair;
 
 public class Main_window extends AppCompatActivity implements Serializable {
+    // Variables for logo detection call
     public final static int MY_REQUEST_CODE = 1;
     private static String currentPhotoPath = "";
+    // Size of imageView
     private static int targetH = 0;
     private static int targetW = 0;
+    // Variable used to find scaleFactor value
     private static int maxPhotoSide = 1024;
-    public static String textString = "";
+    // Text of Main_window textView
     private static String statusString = "";
+    // True if TextActivity exists, else false
     private static boolean textActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Create activity, set it fullscreen, draw picture if exists, set textView text and set Toolbar
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -69,6 +74,8 @@ public class Main_window extends AppCompatActivity implements Serializable {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == MY_REQUEST_CODE && resultCode == RESULT_OK) {
+            // If there aren't errors with the logo detection call the picture and the textView text are set;
+            // requestCode is an id of the call, used not to confuse two contemporary calls
             setImage();
             setActualText(getString(R.string.status_text_sending_logo));
 
@@ -80,7 +87,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
             try {
                 ExifInterface exif = new ExifInterface(currentPhotoPath); // Exif is a value that represents the rotation of the photo compared to the rotation of camera
                 int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-                switch (orientation) { //Images can have a different exif, so if they have a rotation of 90° or 270° then height and width are swapped
+                switch (orientation) { // Images can have a different exif, so if they have a rotation of 90° or 270° then height and width are swapped
                     case 5:
                         photoW = bmOptions.outHeight;
                         photoH = bmOptions.outWidth;
@@ -164,6 +171,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
                 // Convert the JSON into a string
                 String body = postData.toString();
 
+                // Create request
                 Fuel.post(requestURL)
                         .header(
                                 new Pair<String, Object>("content-length", body.length()),
@@ -213,6 +221,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
                 e.printStackTrace();
             }
         } else {
+            // If there are problems with tha call there isn't an image to load
             currentPhotoPath = "";
         }
     }
@@ -230,11 +239,11 @@ public class Main_window extends AppCompatActivity implements Serializable {
                 targetH = previewImage.getHeight();
             }
 
-            // Delete old operation, cleaning all values and conditions
+            // Delete old operation, cleaning all values and conditions, including toolbar content
             setActualText("");
-            textString = "";
             textActive = false;
             setToolbar();
+            // Create a new intent
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
             // Ensure that there's a camera activity to handle the intent
@@ -361,6 +370,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
     }
 
     private void setToolbar() {
+        // Change toolbar content, so if TextActivity is active there will be an arrow to go to it, else it isn't shown
         Toolbar toolbar = findViewById(R.id.toolbarMain);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -377,6 +387,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
     }
 
     private void searchPage(String logo) {
+        // Create the call to search the correspondent Wikipedia page
         setActualText("Searching Wikipedia page…");
         RESTClass.get(logo, new JsonHttpResponseHandler() {
             @Override
@@ -403,6 +414,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
     }
 
     void setActualText(String newStatusString) {
+        // Change the status text in order to notify the user which operation is in progress
         statusString = newStatusString;
         ((TextView) findViewById(R.id.statusText)).setText(statusString);
     }
@@ -418,6 +430,7 @@ public class Main_window extends AppCompatActivity implements Serializable {
     }
 
     public void onForwardAction(MenuItem mi) {
+        // Action of toolbar arrow
         Intent intent = new Intent(this, TextActivity.class);
         startActivity(intent);
     }

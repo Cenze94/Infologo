@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import cz.msebera.android.httpclient.Header;
 
 public class TextToSpeechRequest {
-    private static final int substringSize = 200;
+    private static final int substringSize = 2000;
 
     public static void sendText(String text, final Main_window window) {
         final String language = "en-gb";

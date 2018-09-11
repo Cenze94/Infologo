@@ -224,7 +224,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
 
     @Override
     public int getCurrentPosition() {
-        if(player!=null && player.mediaPlayer.isPlaying())
+        if(player!=null)
             return player.mediaPlayer.getCurrentPosition();
         else return 0;
     }
@@ -236,7 +236,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
 
     @Override
     public int getDuration() {
-        if(player!=null && player.mediaPlayer.isPlaying())
+        if(player!=null)
             return player.mediaPlayer.getDuration();
         else return 0;
     }

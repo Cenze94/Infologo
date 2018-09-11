@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+// Pop-up message shown when there is an error, it's used in some cases to give more information
 public class ErrorAlert {
     AlertDialog.Builder alertDialogBuilder;
     AlertDialog alertDialog;
@@ -11,23 +12,23 @@ public class ErrorAlert {
     public ErrorAlert(Context context, String errorMessage, String errorTitle) {
         alertDialogBuilder = new AlertDialog.Builder(context);
 
-        // set title
+        // Set title
         alertDialogBuilder.setTitle(errorTitle);
 
-        // set dialog message
+        // Set dialog message
         alertDialogBuilder
                 .setMessage(errorMessage)
                 .setCancelable(false)
                 .setNeutralButton("Ok",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, just close the dialog box and do nothing
+                        // If this button is clicked, just close the dialog box and do nothing
                         dialog.cancel();
                     }
                 });
 
-        // create alert dialog
+        // Create alert dialog
         alertDialog = alertDialogBuilder.create();
-        // show it
+        // Show it
         alertDialog.show();
     }
 }

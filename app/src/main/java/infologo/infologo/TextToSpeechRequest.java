@@ -25,6 +25,7 @@ public class TextToSpeechRequest {
         String textToSend = cutStringText(text);
 
         try {
+            // Prepare JSON for Text-to-speech GET call
             JSONObject input = new JSONObject();
             input.put("text", textToSend);
             JSONObject voice = new JSONObject();
@@ -40,6 +41,7 @@ public class TextToSpeechRequest {
 
             String body = postData.toString();
 
+            // Text-to-speech GET call
             RESTClass.getAudio(window, body, new JsonHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -52,6 +54,7 @@ public class TextToSpeechRequest {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
+                        // Get speech
                         String speech = response.get("audioContent").toString();
 
                         // Set status text
@@ -60,7 +63,7 @@ public class TextToSpeechRequest {
                         // Decode Base64 String into a binary String which contains the mp3 file
                         byte[] bytesSpeech = Base64.decode(speech, Base64.DEFAULT);
 
-                        // Save audio
+                        // Save audio in a local directory
                         File storageDir = window.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
                         File audioFile = new File(storageDir, "logoAudio.mp3");
                         TextActivity.logoAudioDir = audioFile.getAbsolutePath();
@@ -75,9 +78,7 @@ public class TextToSpeechRequest {
                         fOut.flush();
                         fOut.close();
 
-                        System.out.println(audioFile.getAbsolutePath());
-
-                        // Display results in a new activity
+                        // Display results in TextActivity
                         window.activeTextActivity();
                     } catch(Exception e) {
                         window.setActualText("Speech not received.");
@@ -90,6 +91,7 @@ public class TextToSpeechRequest {
     }
 
     private static String cutStringText(String text) {
+        // Get substring from beginning to the next full stop from substringSize
         int index = text.indexOf(".", substringSize)+1;
         return text.substring(0, index);
     }

@@ -25,6 +25,7 @@ public class DownloaderClass {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, File file) {
                     try {
+                        // Parse HTML file as String
                         FileInputStream fin = new FileInputStream(file);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(fin));
                         StringBuilder sb = new StringBuilder();
@@ -34,17 +35,22 @@ public class DownloaderClass {
                         }
                         reader.close();
                         String fileString = sb.toString();
-                        //Make sure you close all streams.
+                        // Make sure you close all streams
                         fin.close();
+                        // Set Main_window status string, although for some reason this change isn't shown
                         window.setActualText("Preparing text of Wikipedia page…");
+                        // Extract data-content pairs
                         setLogoData(fileString);
+                        // Clean HTML file
                         fileString = cleanString(fileString);
+                        // Transform all remaining HTML tags into normal text
                         Spanned textHtml;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                             textHtml = Html.fromHtml(fileString, Html.FROM_HTML_MODE_LEGACY);
                         } else {
                             textHtml = Html.fromHtml(fileString);
                         }
+                        // Prepare text for Text-to-speech service
                         TextToSpeechRequest.sendText(textHtml.toString(), window);
                     } catch(Exception e) {
                         window.setActualText("Error during text preparation.");
@@ -250,17 +256,19 @@ public class DownloaderClass {
     }
 
     private static String cleanSubstring(String fileString, int index) {
+        // Delete the substring from index to end file, that must be unique, else other parts will be deleted, with unknown consequences
         String substring = fileString.substring(index);
         return fileString.replace(substring, "");
     }
 
     private static String cleanSubstring(String fileString, int index, int startIndex) {
+        // Delete the substring from startIndex to index, that must be unique, else other parts will be deleted, with unknown consequences
         String substring = fileString.substring(startIndex, index);
         return fileString.replace(substring, "");
     }
 
     private static void setLogoData(String fileString) {
-        // Get all pairs Type - Data inside the initial table on the right of the Wikipedia page
+        // Get the initial table on the right of the Wikipedia page
         int index = fileString.indexOf("infobox vcard");
         int nextIndex = fileString.indexOf("/table", index);
         String substring = fileString.substring(index, nextIndex);
@@ -273,6 +281,7 @@ public class DownloaderClass {
             index = substring.indexOf("<sup");
         }
 
+        // Get all pairs Type - Data inside the table
         index = substring.indexOf("<th");
         Spanned textHtml;
         String data;

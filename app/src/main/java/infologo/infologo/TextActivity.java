@@ -35,6 +35,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Create activity, set it to fullscreen mode and prepare widgets
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -50,7 +51,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
         vto.addOnGlobalLayoutListener(new  ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                //Call your controller set-up now that the layout is loaded
+                // Call your controller set-up now that the layout is loaded
                 setController();
             }
         });
@@ -64,11 +65,13 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
     }
 
     public void onBackAction(MenuItem mi) {
+        // Back arrow action
         Intent intent = new Intent(this, Main_window.class);
         startActivity(intent);
     }
 
     private void setDataTable() {
+        // Set content-type pairs table
         ((TextView)findViewById(R.id.dataType1)).setText(logoDataType.get(0));
         ((TextView)findViewById(R.id.dataContent1)).setText(logoDataContent.get(0));
         TableLayout table = (findViewById(R.id.table));
@@ -77,6 +80,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
     }
 
     private TableRow newRow(int number) {
+        // Create dynamically new rows, so there will be all content-type pairs without empty rows
         TableRow row = new TableRow(this);
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         row.setLayoutParams(params);
@@ -107,13 +111,16 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
     }
 
     private int DipToPx(int value) {
+        // Conversion from Dip (Density pixel) to Px (Pixel)
         return (int)(value * getResources().getDisplayMetrics().density);
     }
 
     /****************************Audio code****************************/
+    // These are virtual methods implementations
 
     @Override
     protected void onStart() {
+        // Start service and play speech
         super.onStart();
         playAudio(TextActivity.logoAudioDir);
     }
@@ -167,7 +174,7 @@ public class TextActivity extends AppCompatActivity implements Serializable, Med
     }
 
     private void setController(){
-        //set the controller up
+        // Set the controller up
         controller = new MusicController(this);
         controller.setMediaPlayer(this);
         controller.setAnchorView(findViewById(R.id.textLayout));

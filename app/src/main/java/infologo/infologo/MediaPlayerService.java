@@ -34,41 +34,42 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     private final IBinder iBinder = new LocalBinder();
     MediaPlayer mediaPlayer;
     private String mediaFile;
-    //Used to pause/resume MediaPlayer
+    // Used to pause/resume MediaPlayer
     private int resumePosition;
     private AudioManager audioManager;
-    //Handle incoming phone calls
+    // Handle incoming phone calls
     private boolean ongoingCall = false;
     private PhoneStateListener phoneStateListener;
     private TelephonyManager telephonyManager;
     private final int secFfRev = 5;
 
+    // Actions identifiers
     public static final String ACTION_PLAY = "infologo.infologo.ACTION_PLAY";
     public static final String ACTION_PAUSE = "infologo.infologo.ACTION_PAUSE";
     public static final String ACTION_STOP = "infologo.infologo.ACTION_STOP";
     public static final String ACTION_FORWARD = "infologo.infologo.ACTION_FORWARD";
     public static final String ACTION_BACKWARD = "infologo.infologo.ACTION_BACKWARD";
 
-    //MediaSession
+    // MediaSession
     private MediaSessionManager mediaSessionManager;
     private MediaSessionCompat mediaSession;
     private MediaControllerCompat.TransportControls transportControls;
 
-    //AudioPlayer notification ID
+    // AudioPlayer notification ID
     private static final int NOTIFICATION_ID = 101;
 
 
 
     private void initMediaPlayer() {
         mediaPlayer = new MediaPlayer();
-        //Set up MediaPlayer event listeners
+        // Set up MediaPlayer event listeners
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnSeekCompleteListener(this);
         mediaPlayer.setOnInfoListener(this);
-        //Reset so that the MediaPlayer is not pointing to another data source
+        // Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer.reset();
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -116,22 +117,21 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        //Invoked indicating buffering status of
-        //a media resource being streamed over the network.
+        // Invoked indicating buffering status of a media resource being streamed over the network.
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        //Invoked when playback of a media source has completed.
+        // Invoked when playback of a media source has completed.
         stopMedia();
-        //stop the service
+        // Stop the service
         stopSelf();
     }
 
     //Handle errors
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        //Invoked when there has been an error during an asynchronous operation.
+        // Invoked when there has been an error during an asynchronous operation.
         switch(what) {
             case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
                 Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
@@ -148,24 +148,24 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
 
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        //Invoked to communicate some info.
+        // Invoked to communicate some info.
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        //Invoked when the media source is ready for playback.
+        // Invoked when the media source is ready for playback.
         playMedia();
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        //Invoked indicating the completion of a seek operation.
+        // Invoked indicating the completion of a seek operation.
     }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        //Invoked when the audio focus of the system is updated.
+        // Invoked when the audio focus of the system is updated.
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 // Resume playback
@@ -237,7 +237,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             }
             buildNotification(PlaybackStatus.PLAYING);
         }
-        //Handle Intent action from MediaSession.TransportControls
+        // Handle Intent action from MediaSession.TransportControls
         handleIncomingActions(intent);
         return super.onStartCommand(intent, flags, startId);
     }
@@ -250,14 +250,14 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
             mediaPlayer.release();
         }
         removeAudioFocus();
-        //Disable the PhoneStateListener
+        // Disable the PhoneStateListener
         if (phoneStateListener != null) {
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
 
         removeNotification();
 
-        //unregister BroadcastReceivers
+        // Unregister BroadcastReceivers
         unregisterReceiver(becomingNoisyReceiver);
     }
 
@@ -432,6 +432,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     private PendingIntent playbackAction(int actionNumber) {
+        // Activate the corresponding action and change GUI
         Intent playbackAction = new Intent(this, MediaPlayerService.class);
         switch(actionNumber) {
             case 0:
@@ -455,6 +456,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
     }
 
     private void handleIncomingActions(Intent playbackAction) {
+        // Execute the corresponding action
         if(playbackAction == null || playbackAction.getAction() == null) return;
         String actionString = playbackAction.getAction();
         if (actionString.equalsIgnoreCase(ACTION_PLAY)) {

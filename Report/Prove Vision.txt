@@ -1,0 +1,64 @@
+Max 512:
+1.  11 sec
+2.  11 sec
+3.  10 sec
+4.  13 sec
+5.  10 sec
+6.  12 sec
+7.  11 sec
+8.  10 sec
+9.  11 sec
+10. 11 sec
+Media: 11,0 sec
+
+Max 1024:
+1.  32 sec
+2.  31 sec
+3.  33 sec
+4.  33 sec
+5.  32 sec
+6.  27 sec
+7.  28 sec
+8.  30 sec
+9.  29 sec
+10. 36 sec
+Media: 31,1 sec
+
+Max 768:
+1.  27 sec
+2.  32 sec
+3.  33 sec
+4.  32 sec
+5.  30 sec
+6.  35 sec
+7.  31 sec
+8.  33 sec
+9.  29 sec
+10. 35 sec
+Media: 31,7 sec
+
+TEXT-TO-SPEECH
+
+substringSize = 1500 (length = 108 sec):
+1.  7 sec
+2.  5 sec
+3.  5 sec
+4.  4 sec
+5.  4 sec
+Media: 5 sec
+
+substringSize = 2000 (length = 130 sec):
+1.  6 sec
+2.  6 sec
+3.  6 sec
+4.  7 sec
+5.  5 sec
+Media: 6 sec
+
+substringSize = 4000 (length = 255 sec):
+1.  15 sec
+2.  14 sec
+3.  14 sec
+4.  19 sec
+5.  10 sec
+Media: 14,4 sec
